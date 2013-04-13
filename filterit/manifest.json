@@ -1,0 +1,25 @@
+{
+    "name": "FilterIt",
+    "version": "1.0",
+    "manifest_version": 2,
+    "description": "Filter reddit posts.",
+    "background": {
+        "scripts": ["background.js"]
+    },    
+    "page_action": {
+        "default_icon": "filter.png",
+        "default_popup": "popup.html"
+    },    
+    "content_scripts": [ {
+        "js": [ "jquery.min.js", "filter.js"  ],
+        "matches": ["http://www.reddit.com/*"],
+        "exclude_matches": ["http://www.reddit.com/r/*/comments/*"],
+        "css" : ["notification.css"]
+
+    }],
+
+    "permissions" : [
+        "tabs",
+    "http://www.reddit.com/*"
+        ]
+}

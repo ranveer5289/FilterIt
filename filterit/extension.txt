@@ -1,0 +1,74 @@
+sendMessage preffred over sendRequest. Therefore use :
+
+chrome.extension.sendMessage(...) or chrome.tabs.sendMesage to SEND &
+chrome.extension.onMessage.addListener(...) to LISTEN
+
+------------------------------------------------------------------------------------------------------------------
+
+SENDING END
+
+Sending request from content script looks like: chrome.extension.sendMessage
+
+Sending request from extension to a content script looks very similar, except that you
+need to specify which tab send it to.
+
+chrome.tabs.getSelected(null, function(tab) {
+        chrome.tabs.sendMessage(tab.id, {greeting: "hello"}, function(response) {
+                console.log(response.farewell);
+                  
+            });
+
+        });
+
+Above example demonstrated sending a message to the content script in the selected tab.
+
+------------------------------------------------------------------------------------------------------------------
+
+RECIEVING END
+
+setup an chrome.extension.onMessage event listener to handle the message. This looks the
+same from a content script or extension page.
+
+chrome.extension.onMessage.addListener(
+  function(request, sender, sendResponse) {} );
+
+------------------------------------------------------------------------------------------------------------------
+
+**chrome.extension.sendMessage**
+
+sends message to other listener WITHIN the extension. NOTE that extensions cannot send
+messages to content scripts using this method. To send messages to content scripts use
+chrome.tabs.sendMessage.
+
+------------------------------------------------------------------------------------------------------------------
+
+**chrome.tabs.sendMessage**
+
+sends a single message to the content script(s) in the specified tab.
+
+------------------------------------------------------------------------------------------------------------------
+
+**chrome.extension.onMessage.addListener**
+
+Fired when a message is sent from either an extension process or a content script.
+
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+
+Background pages and content script are actually the same. The main difference is that
+background pages and content scripts run in different execution environment. Background
+pages run in the extension environment and are hidden from the user, while content scripts
+run in the webpage environment and can affect the web page you are visiting.
+
+Background pages are scripts that run in the background. The benefit of background page is
+that they are able to communicate with every tab and every extension file in your
+browser. On top background pages can also communicate with browser actions and content
+scripts.
+
+In most cases you’ll want to read the DOM of the visited webpages. Since extensions run in
+a different execution environment it is impossible for background pages or browser actions
+to read DOM-elements of the webpages you’re visiting. Google came up with something clever
+called “content scipts”. Content scripts are injected in the current webpage as if they
+were supplied by the original website.
+
+Read http://developer.chrome.com/extensions/background_pages.html
